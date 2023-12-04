@@ -2,6 +2,7 @@ package board
 
 import (
 	"strings"
+	"sync"
 )
 
 func (b *Board) GetWinner() (string, bool) {
@@ -24,8 +25,7 @@ func (b *Board) GetWinner() (string, bool) {
 		}
 	}
 
-	// check for diagonal wins
-	// go along the top row, slanting down and right
+	// check for diagonal wins, slanting down and right
 	for col := 0; col < b.NumCols(); col++ {
 		diagonal := make([]string, b.NumCols())
 		for row := 0; row < b.NumRows(); row++ {
@@ -37,7 +37,8 @@ func (b *Board) GetWinner() (string, bool) {
 			return winner, true
 		}
 	}
-	// go along the top row, slanting down and left
+
+	// check for diagonal wins, slanting down and left
 	for col := 0; col < b.NumCols(); col++ {
 		diagonal := make([]string, b.NumCols())
 		for row := 0; row < b.NumRows(); row++ {
@@ -51,6 +52,92 @@ func (b *Board) GetWinner() (string, bool) {
 	}
 
 	return "", false
+
+}
+
+func (b *Board) GetWinnerConcurrent() (string, bool) {
+
+	var wg sync.WaitGroup
+
+	cWinner := make(chan string, 1)
+
+	// check for horizontal wins
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		for _, row := range b.grid {
+			// fmt.Printf("check row %v: %v\n", i, row)
+			if winner, ok := checkRow(row); ok {
+				cWinner <- winner
+				return
+			}
+		}
+	}()
+
+	// check for vertical wins
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		for col := 0; col < b.NumCols(); col++ {
+			colValues := make([]string, b.NumRows())
+			for row := 0; row < b.NumRows(); row++ {
+				colValues[row] = b.grid[row][col]
+			}
+			// fmt.Printf("check col %v: %v\n", col, colValues)
+			if winner, ok := checkRow(colValues); ok {
+				cWinner <- winner
+				return
+			}
+		}
+	}()
+
+	// check for diagonal wins, slanting down and right
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		for col := 0; col < b.NumCols(); col++ {
+			diagonal := make([]string, b.NumCols())
+			for row := 0; row < b.NumRows(); row++ {
+				if col+row < b.NumCols() {
+					diagonal[row] = b.grid[row][col+row]
+				}
+			}
+			// fmt.Printf("check diag/right %v: %v\n", col, diagonal)
+			if winner, ok := checkRow(diagonal); ok {
+				cWinner <- winner
+				return
+			}
+		}
+	}()
+
+	// check for diagonal wins, slanting down and left
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		for col := 0; col < b.NumCols(); col++ {
+			diagonal := make([]string, b.NumCols())
+			for row := 0; row < b.NumRows(); row++ {
+				if col-row >= 0 {
+					diagonal[row] = b.grid[row][col-row]
+				}
+			}
+			// fmt.Printf("check diag/left %v: %v\n", col, diagonal)
+			if winner, ok := checkRow(diagonal); ok {
+				cWinner <- winner
+				return
+			}
+		}
+	}()
+
+	wg.Wait()
+
+	select {
+	case winner := <-cWinner:
+		return winner, true
+	default:
+		return "", false
+	}
+
 }
 
 func checkRow(row []string) (string, bool) {
