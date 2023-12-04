@@ -1,36 +1,43 @@
 package main
 
 import (
+	"connect4/board"
 	"fmt"
+	"time"
 )
 
-// TODO: should this be a pointer?
-func MakeMove(b *Board, isPlayer1 bool, col int) (*Board, error) {
+func TimeTest() {
 
-	if col < 0 || col >= b.NumCols() {
-		return b, fmt.Errorf("invalid column %v", col)
-	}
+	board := board.NewBoard(7, 6)
 
-	playerSymbol := Player1Symbol
-	if !isPlayer1 {
-		playerSymbol = Player2Symbol
+	// time 100,000 loops
+	start := time.Now()
+	for i := 0; i < 100_000; i++ {
+		board.GetWinner()
 	}
+	end := time.Now()
+	elapsed := end.Sub(start)
 
-	for row := b.NumRows() - 1; row >= 0; row-- {
-		if b.grid[row][col] == EmptySymbol {
-			b.grid[row][col] = playerSymbol
-			return b, nil
-		}
-	}
-	return b, fmt.Errorf("column %v is full", col)
+	fmt.Printf("Elapsed: %s\n", elapsed)
+
 }
 
 func main() {
-	board := NewBoard(7, 6)
 
-	b, _ := MakeMove(board, true, 0)
+	TimeTest()
 
-	fmt.Println(b)
+	// board := board.NewBoard(7, 6)
+
+	// // board.ApplyMoves([]int{0, 1, 2, 3, 4, 5, 6, 0, 1, 2})
+	// board.ApplyMoves([]int{0, 1, 2, 3, 4, 5, 6, 0, 1, 2, 2, 3, 1, 3, 3})
+
 	// fmt.Println(board)
+
+	// winner, ok := board.GetWinner()
+	// if ok {
+	// 	fmt.Printf("Winner: %v\n", winner)
+	// } else {
+	// 	fmt.Println("No winner")
+	// }
 
 }

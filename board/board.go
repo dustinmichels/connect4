@@ -1,4 +1,4 @@
-package main
+package board
 
 import (
 	"fmt"
@@ -37,6 +37,35 @@ func (b *Board) NumCols() int {
 
 func (b *Board) NumRows() int {
 	return len(b.grid)
+}
+
+func (b *Board) Update(isPlayer1 bool, col int) error {
+
+	if col < 0 || col >= b.NumCols() {
+		return fmt.Errorf("invalid column %v", col)
+	}
+
+	playerSymbol := Player1Symbol
+	if !isPlayer1 {
+		playerSymbol = Player2Symbol
+	}
+
+	for row := b.NumRows() - 1; row >= 0; row-- {
+		if b.grid[row][col] == EmptySymbol {
+			b.grid[row][col] = playerSymbol
+			return nil
+		}
+	}
+	return fmt.Errorf("column %v is full", col)
+}
+
+func (b *Board) ApplyMoves(moves []int) error {
+	for i, col := range moves {
+		if err := b.Update(i%2 == 0, col); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (b *Board) String() string {
