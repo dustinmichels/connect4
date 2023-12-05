@@ -9,9 +9,7 @@ import (
 	"github.com/rivo/tview"
 )
 
-func initBoardPanel(b *board.Board) *tview.Table {
-
-	table := tview.NewTable().SetBorders(false).SetSelectable(true, true)
+func drawBoard(b *board.Board, table *tview.Table) {
 
 	symbolMap := map[string]string{
 		board.EmptySymbol:   "●",
@@ -42,6 +40,11 @@ func initBoardPanel(b *board.Board) *tview.Table {
 		}
 	}
 
+}
+
+func initBoardPanel(b *board.Board) *tview.Table {
+	table := tview.NewTable().SetBorders(false).SetSelectable(true, true)
+	drawBoard(b, table)
 	return table
 }
 
@@ -53,13 +56,14 @@ func main() {
 		SetDynamicColors(true).
 		SetRegions(true).
 		SetTextAlign(tview.AlignCenter)
+
 	fmt.Fprintf(playerPanel, `%s["one"]Player 1[""]%s["two"]Player 2[""]`, "\n", "\n")
 	playerPanel.Highlight("one")
 
 	// debug
 	debugPanel := tview.NewTextView().
 		SetDynamicColors(true).
-		SetTextAlign(tview.AlignCenter)
+		SetTextAlign(tview.AlignCenter).SetScrollable(true)
 
 	// set up board
 	b := board.NewBoard()
@@ -73,6 +77,7 @@ func main() {
 
 	// capture input
 	boardPanel.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		boardPanel.SetSelectable(true, true)
 		_, col := boardPanel.GetSelection()
 		switch event.Key() {
 		case tcell.KeyLeft:
@@ -85,13 +90,25 @@ func main() {
 			if col < b.NumCols()-1 {
 				boardPanel.Select(0, col+1)
 			}
+		case tcell.KeyEnter:
+			return event
 		}
 		return nil
 	})
 
+	boardPanel.SetSelectedFunc(func(row int, col int) {
+		fmt.Fprintf(debugPanel, "\nSelected %v, %v", row, col)
+		boardPanel.SetSelectable(false, true)
+		err := b.Update(true, col)
+		if err != nil {
+			fmt.Fprintf(debugPanel, "\n%v", err)
+		}
+		drawBoard(b, boardPanel)
+	})
+
 	// add borders and titles
 	playerPanel.SetBorder(true).SetTitle("Turn")
-	boardPanel.SetBorder(true).SetTitle("Board")
+	// boardPanel.SetBorder(true).SetTitle("Board")
 	gameFrame.SetBorder(true).SetTitle("Game")
 	debugPanel.SetBorder(true).SetTitle("Debug")
 
