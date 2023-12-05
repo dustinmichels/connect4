@@ -15,7 +15,20 @@ type Board struct {
 	grid [][]string
 }
 
-func NewBoard(width, height int) *Board {
+func NewBoard() *Board {
+	width := 7
+	height := 6
+	grid := make([][]string, height)
+	for i := range grid {
+		grid[i] = make([]string, width)
+		for j := range grid[i] {
+			grid[i][j] = EmptySymbol
+		}
+	}
+	return &Board{grid}
+}
+
+func NewCustomBoard(width, height int) *Board {
 
 	if width > 10 {
 		panic("Width must be less than 10")
