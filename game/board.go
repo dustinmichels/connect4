@@ -1,4 +1,4 @@
-package board
+package game
 
 import (
 	"fmt"
@@ -29,11 +29,9 @@ func NewBoard() *Board {
 }
 
 func NewCustomBoard(width, height int) *Board {
-
 	if width > 10 {
 		panic("Width must be less than 10")
 	}
-
 	grid := make([][]string, height)
 	for i := range grid {
 		grid[i] = make([]string, width)
@@ -83,6 +81,10 @@ func (b *Board) ApplyMoves(moves []int) error {
 		}
 	}
 	return nil
+}
+
+func (b *Board) Print() {
+	fmt.Println(b.String())
 }
 
 func (b *Board) String() string {

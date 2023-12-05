@@ -1,15 +1,24 @@
 package main
 
 import (
-	"connect4/board"
+	"connect4/game"
 	"fmt"
 	"time"
 )
 
 const TestNum = 100_000
 
+func main() {
+	// QuickTest()
+	// TimeTestBasic()
+
+	game := game.NewGame()
+	game.Start()
+
+}
+
 func TimeTestBasic() {
-	board := board.NewBoard()
+	board := game.NewBoard()
 
 	// time 100,000 loops
 	start := time.Now()
@@ -23,17 +32,10 @@ func TimeTestBasic() {
 	fmt.Println("Average: ", elapsed/TestNum)
 }
 
-func main() {
-	board := board.NewBoard()
+func QuickTest() {
+	board := game.NewBoard()
 	board.ApplyMoves([]int{0, 1, 2, 3, 4, 5, 6, 0, 1, 2, 2, 3, 1, 3, 3})
 
 	fmt.Println(board)
-
-	winner, ok := board.GetWinnerConcurrent()
-	if ok {
-		fmt.Printf("Winner: %v\n", winner)
-	} else {
-		fmt.Println("No winner")
-	}
 
 }

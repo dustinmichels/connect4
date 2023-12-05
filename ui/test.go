@@ -2,20 +2,20 @@
 package main
 
 import (
-	"connect4/board"
+	"connect4/game"
 	"fmt"
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
-func drawBoard(b *board.Board, table *tview.Table) {
+func drawBoard(b *game.Board, table *tview.Table) {
 
 	symbolMap := map[string]string{
-		board.EmptySymbol:   "●",
-		board.Player1Symbol: "[red]x[white]",
-		board.Player2Symbol: "[darkblue]o[white]",
-		"fancy":             "●",
+		game.EmptySymbol:   "●",
+		game.Player1Symbol: "[red]x[white]",
+		game.Player2Symbol: "[darkblue]o[white]",
+		"fancy":            "●",
 	}
 
 	// add header row
@@ -42,7 +42,7 @@ func drawBoard(b *board.Board, table *tview.Table) {
 
 }
 
-func initBoardPanel(b *board.Board) *tview.Table {
+func initBoardPanel(b *game.Board) *tview.Table {
 	table := tview.NewTable().SetBorders(false).SetSelectable(true, true)
 	drawBoard(b, table)
 	return table
@@ -66,7 +66,7 @@ func main() {
 		SetTextAlign(tview.AlignCenter).SetScrollable(true)
 
 	// set up board
-	b := board.NewBoard()
+	b := game.NewBoard()
 	b.ApplyMoves([]int{0, 1, 2, 3, 4, 5, 6, 0, 1, 2, 2, 3, 1, 3, 3})
 	boardPanel := initBoardPanel(b)
 
