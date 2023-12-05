@@ -52,6 +52,10 @@ func (b *Board) NumRows() int {
 	return len(b.grid)
 }
 
+func (b *Board) Get(row, col int) string {
+	return b.grid[row][col]
+}
+
 func (b *Board) Update(isPlayer1 bool, col int) error {
 
 	if col < 0 || col >= b.NumCols() {
