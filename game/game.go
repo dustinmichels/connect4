@@ -15,7 +15,3 @@ func NewGame() *Game {
 		Players: players,
 	}
 }
-
-func (g *Game) Start() {
-	g.Match.Start()
-}

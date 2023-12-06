@@ -1,10 +1,5 @@
 package game
 
-import (
-	"fmt"
-	"strconv"
-)
-
 type Match struct {
 	Board         *Board
 	Moves         []int
@@ -13,6 +8,9 @@ type Match struct {
 }
 
 func NewMatch(players []Player) *Match {
+	if len(players) != 2 {
+		panic("Must have exactly 2 players")
+	}
 	return &Match{
 		Board:         NewBoard(),
 		Moves:         []int{},
@@ -21,6 +19,11 @@ func NewMatch(players []Player) *Match {
 	}
 }
 
+func (m *Match) IsPlayer1Active() bool {
+	return m.player1Active
+}
+
+// Apply move for current player
 func (m *Match) ApplyMove(col int) error {
 	err := m.Board.Update(m.player1Active, col)
 	if err != nil {
@@ -28,72 +31,5 @@ func (m *Match) ApplyMove(col int) error {
 	}
 	m.Moves = append(m.Moves, col)
 	m.player1Active = !m.player1Active
-
 	return nil
-}
-
-func (m *Match) IsPlayer1Active() bool {
-	return m.player1Active
-}
-
-func getInput() int {
-
-	for {
-		fmt.Println("input text:")
-		var playerInput string
-		_, err := fmt.Scanln(&playerInput)
-		if err != nil {
-			continue
-		}
-
-		// string to int
-		colEntry, err := strconv.Atoi(playerInput)
-		if err != nil {
-			continue
-		}
-
-		if colEntry < 1 || colEntry > 7 {
-			continue
-		}
-
-		return colEntry
-
-	}
-
-}
-
-func (m *Match) Start() {
-
-	for {
-
-		// clear screen
-		fmt.Print("\033[H\033[2J")
-		m.Board.Print()
-		fmt.Println(m.Moves)
-
-		// check for winner
-		winner, found := m.Board.GetWinner()
-		if found {
-			fmt.Printf("Player %v wins!\n", winner)
-			break
-		}
-
-		// print welcome message
-		if m.player1Active {
-			fmt.Printf("%v's turn\n", m.Players[0].Name)
-		} else {
-			fmt.Printf("%v's turn\n", m.Players[1].Name)
-		}
-
-		// get input
-		col := getInput() - 1
-
-		// update board
-		err := m.ApplyMove(col)
-		if err != nil {
-			panic(err)
-		}
-
-	}
-
 }
