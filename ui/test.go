@@ -49,6 +49,8 @@ func Test() {
 		AddItem(instructionsPanel, 50, 1, false).
 		AddItem(debugPanel, 0, 1, false)
 
+	// flex.SetBackgroundColor(tcell.NewHexColor(0x000000))
+
 	if err := app.SetRoot(flex, true).EnableMouse(false).SetFocus(boardWidget).Run(); err != nil {
 		panic(err)
 	}
