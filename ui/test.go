@@ -17,16 +17,19 @@ func initDebugPanel() *tview.TextView {
 
 func Test() {
 
+	// modalShown := false
+	pages := tview.NewPages()
+
 	// init game
 	g := game.NewGame()
-	b := g.Match.Board
-	b.ApplyMoves([]int{0, 1, 2, 3, 4, 5, 6, 0, 1, 2, 3, 1, 3, 3})
+	// b := g.Match.Board
+	// b.ApplyMoves([]int{ 0, 1, 2, 3, 4, 5, 6, 0, 1, 2, 3, 1, 3, 3})
 
 	app := tview.NewApplication()
 
 	debugPanel := initDebugPanel()
 	playerWidget := initPlayerPanel()
-	boardWidget := initBoardWidget(g, debugPanel, playerWidget)
+	boardWidget := initBoardWidget(g, debugPanel, playerWidget, pages)
 
 	// rules panel
 	instructionsPanel := tview.NewTextView().SetDynamicColors(true)
@@ -94,7 +97,24 @@ func Test() {
 
 	// flex.SetBackgroundColor(tcell.NewHexColor(0x000000))
 
-	if err := app.SetRoot(grid, true).EnableMouse(false).SetFocus(boardWidget).Run(); err != nil {
+	modal := tview.NewModal().
+		SetText("Game over!").
+		AddButtons([]string{"Quit", "Cancel"}).
+		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+			if buttonLabel == "Quit" {
+				app.Stop()
+			}
+		})
+
+	// modal.
+
+	pages.AddPage("grid", grid, true, true).
+		AddPage("modal", modal, false, false)
+
+	// pages.ShowPage("modal")
+	// pages.SwitchToPage("modal")
+
+	if err := app.SetRoot(pages, true).EnableMouse(false).SetFocus(boardWidget).Run(); err != nil {
 		panic(err)
 	}
 

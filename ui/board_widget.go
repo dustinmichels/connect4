@@ -9,7 +9,7 @@ import (
 	"github.com/rivo/tview"
 )
 
-func initBoardWidget(g *game.Game, debugPanel *tview.TextView, playerWidget *tview.TextView) *tview.Table {
+func initBoardWidget(g *game.Game, debugPanel *tview.TextView, playerWidget *tview.TextView, pages *tview.Pages) *tview.Table {
 	b := g.Match.Board
 
 	boardWidget := tview.NewTable().SetBorders(false).SetSelectable(true, true)
@@ -74,6 +74,7 @@ func initBoardWidget(g *game.Game, debugPanel *tview.TextView, playerWidget *tvi
 		winner, found := g.Match.Board.GetWinner()
 		if found {
 			fmt.Fprintf(debugPanel, "\nPlayer %v wins!", winner)
+			pages.ShowPage("modal")
 		}
 
 	})
