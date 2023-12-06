@@ -32,8 +32,8 @@ func Test() {
 	boardWidget := initBoardWidget(g, debugPanel, playerWidget, pages)
 
 	// rules panel
-	instructionsPanel := tview.NewTextView().SetDynamicColors(true)
-	instructionsPanel.SetText(`* Use the arrow keys to move left and right`)
+	// instructionsPanel := tview.NewTextView().SetDynamicColors(true)
+	// instructionsPanel.SetText(`* Use the arrow keys to move left and right`)
 
 	// debug viz
 	// boardWidget.SetBackgroundColor(tcell.ColorGrey)
@@ -49,7 +49,7 @@ func Test() {
 	leftSideBar := tview.NewBox()
 	rightSideBar := tview.NewBox()
 
-	footerText := `use arrow keys to navigate | <space> or <enter> to select a column | ctrl-c to quit`
+	footerText := `arrow keys + <space> or <enter> to select a column | ctrl-c to quit`
 
 	header := tview.NewTextView().SetText(AsciiArt2).SetTextAlign(tview.AlignCenter)
 	footer := tview.NewTextView().SetText(footerText).SetTextAlign(tview.AlignCenter)
