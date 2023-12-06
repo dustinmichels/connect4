@@ -39,7 +39,7 @@ func updatePlayerPanel(playerPanel *tview.TextView, player1Active bool) {
 	player2Label := fmt.Sprintf(`["two"]%s Player 2 [%s]o[white] %s[""]`, startSymbol2, Player2Color, endSymbol2)
 
 	// set up player panel
-	fmt.Fprintf(playerPanel, "\n%s\n%s", player1Label, player2Label)
+	fmt.Fprintf(playerPanel, "\n\n\n\n%s\n%s", player1Label, player2Label)
 
 	// if player1Active {
 	// 	playerPanel.Highlight("one")

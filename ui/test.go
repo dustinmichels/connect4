@@ -34,7 +34,7 @@ func Test() {
 	instructionsPanel.SetText(`* Use the arrow keys to move left and right`)
 
 	// debug viz
-	boardWidget.SetBackgroundColor(tcell.ColorGrey)
+	// boardWidget.SetBackgroundColor(tcell.ColorGrey)
 	gameFrame := tview.NewFrame(boardWidget).
 		SetBorders(1, 1, 1, 1, 2, 2)
 
@@ -58,9 +58,10 @@ func Test() {
 	}
 	// menu := newPrimitive("Menu")
 	// main := newPrimitive("Main content")
-	menu := playerWidget
-	main := gameFrame
-	sideBar := newPrimitive("Side Bar")
+	// main := gameFrame
+
+	leftSideBar := newPrimitive("")
+	rightSideBar := newPrimitive("")
 
 	header := tview.NewTextView().SetText(AsciiArt2).SetTextAlign(tview.AlignCenter)
 
@@ -69,20 +70,24 @@ func Test() {
 
 	grid := tview.NewGrid().
 		SetRows(7, 0, 3).
-		SetColumns(30, 0, 30).
+		SetColumns(0, 25, 30, 0).
 		SetBorders(true).
-		AddItem(header, 0, 0, 1, 3, 0, 0, false).
-		AddItem(newPrimitive("Footer"), 2, 0, 1, 3, 0, 0, false)
+		AddItem(header, 0, 0, 1, 4, 0, 0, false).
+		AddItem(newPrimitive("Footer"), 2, 0, 1, 4, 0, 0, false)
 
 	// Layout for screens narrower than 100 cells (menu and side bar are hidden).
-	grid.AddItem(menu, 0, 0, 0, 0, 0, 0, false).
-		AddItem(main, 1, 0, 1, 3, 0, 0, false).
-		AddItem(sideBar, 0, 0, 0, 0, 0, 0, false)
+	grid.
+		AddItem(leftSideBar, 1, 0, 1, 1, 0, 0, false).
+		AddItem(gameFrame, 1, 1, 1, 1, 0, 0, false).
+		AddItem(playerWidget, 1, 2, 1, 1, 0, 0, false).
+		AddItem(rightSideBar, 1, 3, 1, 1, 0, 0, false)
 
 	// Layout for screens wider than 100 cells.
-	grid.AddItem(menu, 1, 0, 1, 1, 0, 100, false).
-		AddItem(main, 1, 1, 1, 1, 0, 100, false).
-		AddItem(sideBar, 1, 2, 1, 1, 0, 100, false)
+	// grid.
+	// 	AddItem(leftSideBar, 1, 0, 1, 1, 0, 100, false).
+	// 	AddItem(gameFrame, 1, 1, 1, 1, 0, 100, false).
+	// 	AddItem(playerWidget, 1, 2, 1, 1, 0, 100, false).
+	// 	AddItem(rightSideBar, 1, 3, 1, 1, 0, 100, false)
 
 	// Put together the layout
 	flex := tview.NewFlex().

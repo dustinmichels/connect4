@@ -83,8 +83,9 @@ func initBoardWidget(g *game.Game, debugPanel *tview.TextView, playerWidget *tvi
 
 func updateBoardWidget(b *game.Board, boardWidget *tview.Table) {
 
-	player1Color := tcell.NewHexColor(0xed474a)
-	player2Color := tcell.NewHexColor(0xc2f970)
+	player1Color, _ := MakeTcellColor(AnsiRed)
+	player2Color := tcell.NewHexColor(AnsiYellowHex)
+	defaultBgColor := tcell.NewHexColor(AnsiBlueHex)
 
 	symbolMap := map[string]string{
 		game.EmptySymbol:   "●",
@@ -108,7 +109,7 @@ func updateBoardWidget(b *game.Board, boardWidget *tview.Table) {
 		for j := 0; j < b.NumCols(); j++ {
 			symbol := b.Get(i, j)
 			drawSymbol := symbolMap[symbol]
-			bgColor := tcell.ColorBlue
+			bgColor := defaultBgColor
 			if symbol == "X" {
 				bgColor = player1Color
 			}
