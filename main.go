@@ -2,20 +2,12 @@ package main
 
 import (
 	"connect4/game"
+	"connect4/ui"
 	"fmt"
 	"time"
 )
 
 const TestNum = 100_000
-
-func main() {
-	// QuickTest()
-	// TimeTestBasic()
-
-	game := game.NewGame()
-	game.Start()
-
-}
 
 func TimeTestBasic() {
 	board := game.NewBoard()
@@ -35,7 +27,16 @@ func TimeTestBasic() {
 func QuickTest() {
 	board := game.NewBoard()
 	board.ApplyMoves([]int{0, 1, 2, 3, 4, 5, 6, 0, 1, 2, 2, 3, 1, 3, 3})
-
 	fmt.Println(board)
+}
+
+func main() {
+	// QuickTest()
+	// TimeTestBasic()
+
+	// game := game.NewGame()
+	// game.Start()
+
+	ui.Test()
 
 }

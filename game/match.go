@@ -21,8 +21,8 @@ func NewMatch(players []Player) *Match {
 	}
 }
 
-func (m *Match) ApplyMove(isPlayer1 bool, col int) error {
-	err := m.Board.Update(isPlayer1, col)
+func (m *Match) ApplyMove(col int) error {
+	err := m.Board.Update(m.player1Active, col)
 	if err != nil {
 		return err
 	}
@@ -30,6 +30,10 @@ func (m *Match) ApplyMove(isPlayer1 bool, col int) error {
 	m.player1Active = !m.player1Active
 
 	return nil
+}
+
+func (m *Match) IsPlayer1Active() bool {
+	return m.player1Active
 }
 
 func getInput() int {
@@ -85,7 +89,7 @@ func (m *Match) Start() {
 		col := getInput() - 1
 
 		// update board
-		err := m.ApplyMove(m.player1Active, col)
+		err := m.ApplyMove(col)
 		if err != nil {
 			panic(err)
 		}
