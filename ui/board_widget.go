@@ -83,8 +83,8 @@ func updateBoardWidget(b *game.Board, boardWidget *tview.Table) {
 
 	symbolMap := map[string]string{
 		game.EmptySymbol:   "●",
-		game.Player1Symbol: "[red]x[white]",
-		game.Player2Symbol: "[green]o[white]",
+		game.Player1Symbol: fmt.Sprintf("[%s]x[white]", Player1Color),
+		game.Player2Symbol: fmt.Sprintf("[%s]o[white]", Player2Color),
 		"fancy":            "●",
 	}
 
