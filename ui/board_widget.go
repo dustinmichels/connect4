@@ -15,6 +15,8 @@ func initBoardWidget(g *game.Game, debugPanel *tview.TextView, playerWidget *tvi
 	boardWidget := tview.NewTable().SetBorders(false).SetSelectable(true, true)
 	updateBoardWidget(b, boardWidget)
 
+	// boardWidget.SetBorders(true)
+
 	artificialEnter := tcell.NewEventKey(tcell.KeyEnter, 0, tcell.ModNone)
 
 	// Capture keystrokes
@@ -81,17 +83,20 @@ func initBoardWidget(g *game.Game, debugPanel *tview.TextView, playerWidget *tvi
 
 func updateBoardWidget(b *game.Board, boardWidget *tview.Table) {
 
+	player1Color := tcell.NewHexColor(0xed474a)
+	player2Color := tcell.NewHexColor(0xc2f970)
+
 	symbolMap := map[string]string{
 		game.EmptySymbol:   "●",
-		game.Player1Symbol: fmt.Sprintf("[%s]x[white]", Player1Color),
-		game.Player2Symbol: fmt.Sprintf("[%s]o[white]", Player2Color),
+		game.Player1Symbol: fmt.Sprintf("[%s]X[white]", "lightgrey"),
+		game.Player2Symbol: fmt.Sprintf("[%s]0[white]", "gray"),
 		"fancy":            "●",
 	}
 
 	// add header row
 	for i := 0; i < b.NumCols(); i++ {
 		boardWidget.SetCell(0, i,
-			tview.NewTableCell(fmt.Sprintf("%d", i+1)).
+			tview.NewTableCell(fmt.Sprintf(" %d", i+1)).
 				SetAlign(tview.AlignCenter))
 		boardWidget.SetCell(1, i,
 			tview.NewTableCell("-").
@@ -101,10 +106,19 @@ func updateBoardWidget(b *game.Board, boardWidget *tview.Table) {
 	// set up cells
 	for i := 0; i < b.NumRows(); i++ {
 		for j := 0; j < b.NumCols(); j++ {
-			symbol := symbolMap[b.Get(i, j)]
+			symbol := b.Get(i, j)
+			drawSymbol := symbolMap[symbol]
+			bgColor := tcell.ColorBlue
+			if symbol == "X" {
+				bgColor = player1Color
+			}
+			if symbol == "O" {
+				bgColor = player2Color
+			}
+
 			boardWidget.SetCell(i+2, j,
-				tview.NewTableCell(symbol).
-					// SetBackgroundColor(tcell.ColorGrey).
+				tview.NewTableCell(drawSymbol).
+					SetBackgroundColor(bgColor).
 					// SetTextColor(tcell.ColorRed).
 					SetAlign(tview.AlignCenter))
 		}
