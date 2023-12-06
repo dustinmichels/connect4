@@ -84,13 +84,13 @@ func initBoardWidget(g *game.Game, debugPanel *tview.TextView, playerWidget *tvi
 func updateBoardWidget(b *game.Board, boardWidget *tview.Table) {
 
 	player1Color, _ := MakeTcellColor(AnsiRed)
-	player2Color := tcell.NewHexColor(AnsiYellowHex)
-	defaultBgColor := tcell.NewHexColor(AnsiBlueHex)
+	player2Color, _ := MakeTcellColor(AnsiYellow)
+	defaultBgColor, _ := MakeTcellColor(AnsiBlue)
 
 	symbolMap := map[string]string{
 		game.EmptySymbol:   "●",
-		game.Player1Symbol: fmt.Sprintf("[%s]X[white]", "lightgrey"),
-		game.Player2Symbol: fmt.Sprintf("[%s]0[white]", "gray"),
+		game.Player1Symbol: fmt.Sprintf("[%s]X[white]", "white"),
+		game.Player2Symbol: fmt.Sprintf("[%s]0[white]", "black"),
 		"fancy":            "●",
 	}
 

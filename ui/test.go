@@ -5,7 +5,6 @@ import (
 	"connect4/game"
 	"fmt"
 
-	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
@@ -38,65 +37,58 @@ func Test() {
 	gameFrame := tview.NewFrame(boardWidget).
 		SetBorders(1, 1, 1, 1, 2, 2)
 
-	// gameFrame := tview.NewFrame(boardWidget).
-	// 	SetBorders(2, 2, 2, 2, 4, 4).
-	// 	AddText("Header [red]left[white]", true, tview.AlignLeft, tcell.ColorWhite).
-	// 	AddText("Footer second middle", false, tview.AlignCenter, tcell.ColorGreen)
-
-	// add borders and titles
+	// // add borders and titles
 	// playerWidget.SetBorder(true).SetTitle("Turn")
 	// gameFrame.SetBorder(true).SetTitle("Game")
 	// instructionsPanel.SetBorder(true).SetTitle("Instructions")
 	// debugPanel.SetBorder(true).SetTitle("Debug")
 
-	// blankPanel := tview.NewTextView().SetDynamicColors(true)
+	leftSideBar := tview.NewBox()
+	rightSideBar := tview.NewBox()
 
-	newPrimitive := func(text string) tview.Primitive {
-		return tview.NewTextView().
-			SetTextAlign(tview.AlignCenter).
-			SetText(text)
-	}
-	// menu := newPrimitive("Menu")
-	// main := newPrimitive("Main content")
-	// main := gameFrame
-
-	leftSideBar := newPrimitive("")
-	rightSideBar := newPrimitive("")
+	footerText := `use arrow keys to navigate | <space> or <enter> to select a column | ctrl-c to quit`
 
 	header := tview.NewTextView().SetText(AsciiArt2).SetTextAlign(tview.AlignCenter)
+	footer := tview.NewTextView().SetText(footerText).SetTextAlign(tview.AlignCenter)
+
+	footer.SetBorder(true).SetTitle(" Guide ")
 
 	x, y, w, h := boardWidget.GetRect()
 	fmt.Fprintf(debugPanel, "\n%v %v %v %v", x, y, w, h)
 
 	grid := tview.NewGrid().
-		SetRows(7, 0, 3).
-		SetColumns(0, 25, 30, 0).
-		SetBorders(true).
+		SetRows(7, 0, 10, 0, 3).
+		SetColumns(0, 25, 25, 0).
+		SetBorders(false).
 		AddItem(header, 0, 0, 1, 4, 0, 0, false).
-		AddItem(newPrimitive("Footer"), 2, 0, 1, 4, 0, 0, false)
+		AddItem(footer, 4, 0, 1, 4, 0, 0, false)
 
 	// Layout for screens narrower than 100 cells (menu and side bar are hidden).
 	grid.
-		AddItem(leftSideBar, 1, 0, 1, 1, 0, 0, false).
-		AddItem(gameFrame, 1, 1, 1, 1, 0, 0, false).
-		AddItem(playerWidget, 1, 2, 1, 1, 0, 0, false).
-		AddItem(rightSideBar, 1, 3, 1, 1, 0, 0, false)
+		AddItem(tview.NewBox(), 1, 0, 1, 4, 0, 0, false). // upper fill
+		AddItem(leftSideBar, 2, 0, 1, 1, 0, 0, false).
+		AddItem(gameFrame, 2, 1, 1, 1, 0, 0, false).
+		AddItem(playerWidget, 2, 2, 1, 1, 0, 0, false).
+		AddItem(rightSideBar, 2, 3, 1, 1, 0, 0, false).
+		AddItem(tview.NewBox(), 3, 0, 1, 4, 0, 0, false) // lower fill
 
 	// Layout for screens wider than 100 cells.
 	// grid.
-	// 	AddItem(leftSideBar, 1, 0, 1, 1, 0, 100, false).
-	// 	AddItem(gameFrame, 1, 1, 1, 1, 0, 100, false).
-	// 	AddItem(playerWidget, 1, 2, 1, 1, 0, 100, false).
-	// 	AddItem(rightSideBar, 1, 3, 1, 1, 0, 100, false)
+	// 	AddItem(tview.NewBox(), 1, 0, 1, 4, 0, 100, false). // upper fill
+	// 	AddItem(leftSideBar, 2, 0, 1, 1, 0, 100, false).
+	// 	AddItem(gameFrame, 2, 1, 1, 1, 0, 100, false).
+	// 	AddItem(playerWidget, 2, 2, 1, 1, 0, 100, false).
+	// 	AddItem(rightSideBar, 2, 3, 1, 1, 0, 100, false).
+	// 	AddItem(tview.NewBox(), 3, 0, 1, 4, 0, 100, false) // lower fill
 
 	// Put together the layout
-	flex := tview.NewFlex().
-		AddItem(playerWidget, 20, 1, false).
-		AddItem(gameFrame, 18, 1, false).
-		AddItem(instructionsPanel, 40, 1, false).
-		AddItem(debugPanel, 0, 1, false)
+	// flex := tview.NewFlex().
+	// 	AddItem(playerWidget, 20, 1, false).
+	// 	AddItem(gameFrame, 18, 1, false).
+	// 	AddItem(instructionsPanel, 40, 1, false).
+	// 	AddItem(debugPanel, 0, 1, false)
 
-	flex.Box.SetBackgroundColor(tcell.NewHexColor(0x000000))
+	// flex.Box.SetBackgroundColor(tcell.NewHexColor(0x000000))
 
 	// AddItem(debugPanel, 0, 1, false)
 
