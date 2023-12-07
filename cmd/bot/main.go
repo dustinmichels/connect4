@@ -9,13 +9,14 @@ import (
 func main() {
 	g := game.NewGame()
 	b := g.Match.Board
-
-	b.ApplyMoves([]int{0, 1, 0, 2, 0, 2, 0})
-
+	b.ApplyMoves([]int{0, 1, 0, 2, 0, 2, 4})
 	fmt.Println(b)
+	fmt.Println(bot.Score(b))
 
-	score := bot.Score(b)
-
-	fmt.Println(score)
+	g = game.NewGame()
+	b = g.Match.Board
+	b.ApplyMoves([]int{0, 1, 0, 2, 0, 2, 1})
+	fmt.Println(b)
+	fmt.Println(bot.Score(b))
 
 }

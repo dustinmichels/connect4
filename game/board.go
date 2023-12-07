@@ -17,7 +17,7 @@ const (
 )
 
 type Board struct {
-	grid [][]string
+	Grid [][]string
 }
 
 func NewBoard() *Board {
@@ -32,15 +32,15 @@ func NewBoard() *Board {
 }
 
 func (b *Board) NumCols() int {
-	return len(b.grid[0])
+	return len(b.Grid[0])
 }
 
 func (b *Board) NumRows() int {
-	return len(b.grid)
+	return len(b.Grid)
 }
 
 func (b *Board) Get(row, col int) string {
-	return b.grid[row][col]
+	return b.Grid[row][col]
 }
 
 // ---------- Applying moves ----------
@@ -59,8 +59,8 @@ func (b *Board) Update(isPlayer1 bool, col int) error {
 	}
 
 	for row := b.NumRows() - 1; row >= 0; row-- {
-		if b.grid[row][col] == EmptySymbol {
-			b.grid[row][col] = playerSymbol
+		if b.Grid[row][col] == EmptySymbol {
+			b.Grid[row][col] = playerSymbol
 			return nil
 		}
 	}
@@ -80,9 +80,20 @@ func (b *Board) ApplyMoves(moves []int) error {
 
 // ---------- Check status ----------
 
+// Get possible moves for the next player
+func (b *Board) GetPossibleMoves() []int {
+	moves := []int{}
+	for col := 0; col < b.NumCols(); col++ {
+		if b.Grid[0][col] == EmptySymbol {
+			moves = append(moves, col)
+		}
+	}
+	return moves
+}
+
 // Check if top row is all full
 func (b *Board) IsFull() bool {
-	for _, col := range b.grid[0] {
+	for _, col := range b.Grid[0] {
 		if col == EmptySymbol {
 			return false
 		}
@@ -94,7 +105,7 @@ func (b *Board) IsFull() bool {
 func (b *Board) GetWinner() (winner int, found bool) {
 
 	// check for horizontal wins
-	for _, row := range b.grid {
+	for _, row := range b.Grid {
 		if winner, found := checkRow(row); found {
 			return winner, true
 		}
@@ -104,7 +115,7 @@ func (b *Board) GetWinner() (winner int, found bool) {
 	for col := 0; col < b.NumCols(); col++ {
 		colValues := make([]string, b.NumRows())
 		for row := 0; row < b.NumRows(); row++ {
-			colValues[row] = b.grid[row][col]
+			colValues[row] = b.Grid[row][col]
 		}
 		if winner, found := checkRow(colValues); found {
 			return winner, true
@@ -116,7 +127,7 @@ func (b *Board) GetWinner() (winner int, found bool) {
 		diagonal := make([]string, b.NumCols())
 		for row := 0; row < b.NumRows(); row++ {
 			if col+row < b.NumCols() {
-				diagonal[row] = b.grid[row][col+row]
+				diagonal[row] = b.Grid[row][col+row]
 			}
 		}
 		if winner, found := checkRow(diagonal); found {
@@ -129,7 +140,7 @@ func (b *Board) GetWinner() (winner int, found bool) {
 		diagonal := make([]string, b.NumCols())
 		for row := 0; row < b.NumRows(); row++ {
 			if col-row >= 0 {
-				diagonal[row] = b.grid[row][col-row]
+				diagonal[row] = b.Grid[row][col-row]
 			}
 		}
 		if winner, found := checkRow(diagonal); found {
@@ -183,17 +194,18 @@ func (b *Board) String() string {
 	s := ""
 
 	// print header
-	for i := 0; i < len(b.grid[0]); i++ {
+	for i := 0; i < len(b.Grid[0]); i++ {
 		s += fmt.Sprintf("%v  ", displayTable[strconv.Itoa(i+1)])
 	}
 	s += "\n"
 
 	// print board
-	for _, row := range b.grid {
+	for _, row := range b.Grid {
 		for _, col := range row {
 			s += fmt.Sprintf("%v ", displayTable[col])
 		}
 		s += "\n"
 	}
-	return s
+
+	return strings.TrimSpace(s)
 }
