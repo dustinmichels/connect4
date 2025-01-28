@@ -10,6 +10,7 @@ require (
 	github.com/rivo/tview v0.0.0-20231126152417-33a1d271f2b6
 	google.golang.org/grpc v1.70.0
 	google.golang.org/protobuf v1.36.4
+	
 )
 
 require (
