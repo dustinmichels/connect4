@@ -40,11 +40,4 @@ func updatePlayerPanel(playerPanel *tview.TextView, player1Active bool) {
 
 	// set up player panel
 	fmt.Fprintf(playerPanel, "\n\n\n\n%s\n%s", player1Label, player2Label)
-
-	// if player1Active {
-	// 	playerPanel.Highlight("one")
-	// } else {
-	// 	playerPanel.Highlight("two")
-	// }
-
 }

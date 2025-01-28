@@ -7,7 +7,7 @@ import (
 	"github.com/rivo/tview"
 )
 
-const debug = true
+const debug = false
 
 func initDebugPanel() *tview.TextView {
 	debugPanel := tview.NewTextView().
@@ -16,7 +16,7 @@ func initDebugPanel() *tview.TextView {
 	return debugPanel
 }
 
-func initApp(g *game.Game) {
+func StartApp(g *game.Game) {
 
 	app := tview.NewApplication()
 
@@ -25,17 +25,8 @@ func initApp(g *game.Game) {
 	playerWidget := initPlayerPanel()
 	boardWidget := initBoardWidget(g, debugPanel, playerWidget, pages)
 
-	// debug viz
-	// boardWidget.SetBackgroundColor(tcell.ColorGrey)
-
 	gameFrame := tview.NewFrame(boardWidget).
 		SetBorders(1, 1, 1, 1, 2, 2)
-
-	// add borders and titles
-	// playerWidget.SetBorder(true).SetTitle("Turn")
-	// gameFrame.SetBorder(true).SetTitle("Game")
-	// instructionsPanel.SetBorder(true).SetTitle("Instructions")
-	// debugPanel.SetBorder(true).SetTitle("Debug")
 
 	leftSideBar := tview.NewBox()
 	rightSideBar := tview.NewBox()
@@ -47,13 +38,14 @@ func initApp(g *game.Game) {
 
 	footer.SetBorder(true).SetTitle(" Guide ")
 
+	// print dimensions to debug panel
 	x, y, w, h := boardWidget.GetRect()
 	fmt.Fprintf(debugPanel, "\n%v %v %v %v", x, y, w, h)
 
 	grid := tview.NewGrid().
-		SetRows(7, 0, 10, 0, 3).
+		SetRows(8, 0, 10, 0, 3).
 		SetColumns(0, 25, 25, 0).
-		SetBorders(false).
+		SetBorders(true).
 		AddItem(header, 0, 0, 1, 4, 0, 0, false).
 		AddItem(footer, 4, 0, 1, 4, 0, 0, false)
 
@@ -68,19 +60,6 @@ func initApp(g *game.Game) {
 	if debug {
 		grid.AddItem(debugPanel, 1, 0, 1, 1, 0, 0, false) // lower fill
 	}
-
-	// Put together the layout
-	// flex := tview.NewFlex().
-	// 	AddItem(playerWidget, 20, 1, false).
-	// 	AddItem(gameFrame, 18, 1, false).
-	// 	AddItem(instructionsPanel, 40, 1, false).
-	// 	AddItem(debugPanel, 0, 1, false)
-
-	// flex.Box.SetBackgroundColor(tcell.NewHexColor(0x000000))
-
-	// AddItem(debugPanel, 0, 1, false)
-
-	// flex.SetBackgroundColor(tcell.NewHexColor(0x000000))
 
 	modal := tview.NewModal().
 		SetText("Game over!").
