@@ -25,9 +25,10 @@ type server struct {
 }
 
 func (s *server) JoinGame(ctx context.Context, req *pb.JoinRequest) (*pb.JoinResponse, error) {
+	msg := fmt.Sprintf("Hello, %s! Welcome to Connect4!", req.PlayerName)
 	return &pb.JoinResponse{
 		PlayerId: "player1",
-		Message:  "Welcome to Connect4!",
+		Message:  msg,
 	}, nil
 }
 
