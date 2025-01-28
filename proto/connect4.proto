@@ -1,8 +1,9 @@
 syntax = "proto3";
 
-package connect4;
+package proto;
 
-option go_package = "github.com/dustinmichels/connect4/generated;connect4";
+option go_package = "github.com/dustinmichels/connect4/proto";
+
 
 // Service definition
 service Connect4Game {
@@ -13,7 +14,7 @@ service Connect4Game {
   rpc MakeMove(MoveRequest) returns (MoveResponse);
 
   // Stream the game state in real-time
-  rpc StreamGameState(StreamRequest) returns (stream GameState);
+  // rpc StreamGameState(StreamRequest) returns (stream GameState);
 }
 
 // Message definitions
@@ -36,12 +37,12 @@ message MoveResponse {
   string message = 2;
 }
 
-message StreamRequest {
-  string player_id = 1;
-}
+// message StreamRequest {
+//   string player_id = 1;
+// }
 
-message GameState {
-  repeated string board = 1; // Board rows as strings
-  string current_turn = 2;  // Player ID of the current turn
-  string winner = 3;        // Winner's ID (if any)
-}
+// message GameState {
+//   repeated string board = 1; // Board rows as strings
+//   string current_turn = 2;  // Player ID of the current turn
+//   string winner = 3;        // Winner's ID (if any)
+// }
