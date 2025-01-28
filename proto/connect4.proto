@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package connect4;
+
+option go_package = "github.com/dustinmichels/connect4/generated;connect4";
+
+// Service definition
+service Connect4Game {
+  // Player joins the game
+  rpc JoinGame(JoinRequest) returns (JoinResponse);
+
+  // Player makes a move
+  rpc MakeMove(MoveRequest) returns (MoveResponse);
+
+  // Stream the game state in real-time
+  rpc StreamGameState(StreamRequest) returns (stream GameState);
+}
+
+// Message definitions
+message JoinRequest {
+  string player_name = 1;
+}
+
+message JoinResponse {
+  string player_id = 1;
+  string message = 2;
+}
+
+message MoveRequest {
+  string player_id = 1;
+  int32 column = 2;
+}
+
+message MoveResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message StreamRequest {
+  string player_id = 1;
+}
+
+message GameState {
+  repeated string board = 1; // Board rows as strings
+  string current_turn = 2;  // Player ID of the current turn
+  string winner = 3;        // Winner's ID (if any)
+}
