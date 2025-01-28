@@ -17,8 +17,8 @@ func GameLoop() {
 		fmt.Println(m.Moves)
 
 		// check for winner
-		winner, found := m.Board.GetWinner()
-		if found {
+		winner := m.Board.CheckWinner()
+		if winner != 0 {
 			fmt.Printf("Player %v wins!\n", winner)
 			break
 		}

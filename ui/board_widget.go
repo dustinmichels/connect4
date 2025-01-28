@@ -15,8 +15,6 @@ func initBoardWidget(g *game.Game, debugPanel *tview.TextView, playerWidget *tvi
 	boardWidget := tview.NewTable().SetBorders(false).SetSelectable(true, true)
 	updateBoardWidget(b, boardWidget)
 
-	// boardWidget.SetBorders(true)
-
 	artificialEnter := tcell.NewEventKey(tcell.KeyEnter, 0, tcell.ModNone)
 
 	// Capture keystrokes
@@ -71,8 +69,8 @@ func initBoardWidget(g *game.Game, debugPanel *tview.TextView, playerWidget *tvi
 		updatePlayerPanel(playerWidget, g.Match.IsPlayer1Active())
 		updateBoardWidget(b, boardWidget)
 
-		winner, found := g.Match.Board.GetWinner()
-		if found {
+		winner := g.Match.Board.CheckWinner()
+		if winner != 0 {
 			fmt.Fprintf(debugPanel, "\nPlayer %v wins!", winner)
 			pages.ShowPage("modal")
 		}
@@ -88,11 +86,10 @@ func updateBoardWidget(b *game.Board, boardWidget *tview.Table) {
 	player2Color, _ := MakeTcellColor(AnsiYellow)
 	defaultBgColor, _ := MakeTcellColor(AnsiBlue)
 
-	symbolMap := map[string]string{
+	symbolMap := map[uint8]string{
 		game.EmptySymbol:   "●",
 		game.Player1Symbol: fmt.Sprintf("[%s]X[white]", "white"),
 		game.Player2Symbol: fmt.Sprintf("[%s]0[white]", "black"),
-		"fancy":            "●",
 	}
 
 	// add header row
@@ -111,10 +108,10 @@ func updateBoardWidget(b *game.Board, boardWidget *tview.Table) {
 			symbol := b.Get(i, j)
 			drawSymbol := symbolMap[symbol]
 			bgColor := defaultBgColor
-			if symbol == "X" {
+			if symbol == game.Player1Symbol {
 				bgColor = player1Color
 			}
-			if symbol == "O" {
+			if symbol == game.Player2Symbol {
 				bgColor = player2Color
 			}
 

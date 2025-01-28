@@ -15,7 +15,7 @@ func TimeTestBasic() {
 	// time 100,000 loops
 	start := time.Now()
 	for i := 0; i < 100_000; i++ {
-		board.GetWinner()
+		board.CheckWinner()
 	}
 	end := time.Now()
 	elapsed := end.Sub(start)

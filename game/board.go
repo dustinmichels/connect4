@@ -9,24 +9,22 @@ import (
 )
 
 const (
-	EmptySymbol   = "-"
-	Player1Symbol = "X"
-	Player2Symbol = "O"
-	boardWidth    = 7
-	boardHeight   = 6
+	EmptySymbol   uint8 = 0
+	Player1Symbol uint8 = 1
+	Player2Symbol uint8 = 2
+	boardWidth          = 7
+	boardHeight         = 6
+	winningLength       = 4
 )
 
 type Board struct {
-	Grid [][]string
+	Grid [][]uint8
 }
 
 func NewBoard() *Board {
-	grid := make([][]string, boardHeight)
+	grid := make([][]uint8, boardHeight)
 	for i := range grid {
-		grid[i] = make([]string, boardWidth)
-		for j := range grid[i] {
-			grid[i][j] = EmptySymbol
-		}
+		grid[i] = make([]uint8, boardWidth)
 	}
 	return &Board{grid}
 }
@@ -39,13 +37,14 @@ func (b *Board) NumRows() int {
 	return len(b.Grid)
 }
 
-func (b *Board) Get(row, col int) string {
+func (b *Board) Get(row, col int) uint8 {
 	return b.Grid[row][col]
 }
 
 // ---------- Applying moves ----------
 
 // Add the appropriate symbol to the first empty row in the given column
+// Ie, "drop" a piece in the column
 // Returns an error if the column is full or invalid
 func (b *Board) Update(isPlayer1 bool, col int) error {
 
@@ -53,13 +52,14 @@ func (b *Board) Update(isPlayer1 bool, col int) error {
 		return fmt.Errorf("invalid column %v", col)
 	}
 
-	playerSymbol := Player1Symbol
-	if !isPlayer1 {
-		playerSymbol = Player2Symbol
+	// set correct player symbol
+	var playerSymbol uint8 = Player2Symbol
+	if isPlayer1 {
+		playerSymbol = Player1Symbol
 	}
 
 	for row := b.NumRows() - 1; row >= 0; row-- {
-		if b.Grid[row][col] == EmptySymbol {
+		if b.Grid[row][col] == 0 {
 			b.Grid[row][col] = playerSymbol
 			return nil
 		}
@@ -101,70 +101,14 @@ func (b *Board) IsFull() bool {
 	return true
 }
 
-// Returns the winner of the game as int (1 or 2) if found
-func (b *Board) GetWinner() (winner int, found bool) {
+// func (b *Board) GetWinner() (winner int, found bool) {
+// 	return 0, false
+// }
 
-	// check for horizontal wins
-	for _, row := range b.Grid {
-		if winner, found := checkRow(row); found {
-			return winner, true
-		}
-	}
-
-	// check for vertical wins
-	for col := 0; col < b.NumCols(); col++ {
-		colValues := make([]string, b.NumRows())
-		for row := 0; row < b.NumRows(); row++ {
-			colValues[row] = b.Grid[row][col]
-		}
-		if winner, found := checkRow(colValues); found {
-			return winner, true
-		}
-	}
-
-	// check for diagonal wins, slanting down and right
-	for col := 0; col < b.NumCols(); col++ {
-		diagonal := make([]string, b.NumCols())
-		for row := 0; row < b.NumRows(); row++ {
-			if col+row < b.NumCols() {
-				diagonal[row] = b.Grid[row][col+row]
-			}
-		}
-		if winner, found := checkRow(diagonal); found {
-			return winner, true
-		}
-	}
-
-	// check for diagonal wins, slanting down and left
-	for col := 0; col < b.NumCols(); col++ {
-		diagonal := make([]string, b.NumCols())
-		for row := 0; row < b.NumRows(); row++ {
-			if col-row >= 0 {
-				diagonal[row] = b.Grid[row][col-row]
-			}
-		}
-		if winner, found := checkRow(diagonal); found {
-			return winner, true
-		}
-	}
-
-	return 0, false
-}
-
-func checkRow(row []string) (int, bool) {
-	player1Win := strings.Repeat(Player1Symbol, 4)
-	player2Win := strings.Repeat(Player2Symbol, 4)
-	rowS := strings.Join(row, "")
-
-	if strings.Contains(rowS, player1Win) {
-		return 1, true
-	}
-
-	if strings.Contains(rowS, player2Win) {
-		return 2, true
-	}
-
-	return 0, false
+// CheckWinner checks if there is a winner on the board.
+// Returns the symbol of the winner (Player1Symbol or Player2Symbol) or EmptySymbol if no winner.
+func (b *Board) CheckWinner() uint8 {
+	return checkWinner(b)
 }
 
 // ---------- Display ----------
@@ -176,19 +120,22 @@ func (b *Board) Print() {
 func (b *Board) String() string {
 
 	displayTable := map[string]emoji.Emoji{
+		"1":  emoji.Keycap1,
+		"2":  emoji.Keycap2,
+		"3":  emoji.Keycap3,
+		"4":  emoji.Keycap4,
+		"5":  emoji.Keycap5,
+		"6":  emoji.Keycap6,
+		"7":  emoji.Keycap7,
+		"8":  emoji.Keycap8,
+		"9":  emoji.Keycap9,
+		"10": emoji.Keycap10,
+	}
+
+	displayPlayerSymbols := map[uint8]emoji.Emoji{
 		EmptySymbol:   emoji.WhiteCircle,
 		Player1Symbol: emoji.RedCircle,
 		Player2Symbol: emoji.YellowCircle,
-		"1":           emoji.Keycap1,
-		"2":           emoji.Keycap2,
-		"3":           emoji.Keycap3,
-		"4":           emoji.Keycap4,
-		"5":           emoji.Keycap5,
-		"6":           emoji.Keycap6,
-		"7":           emoji.Keycap7,
-		"8":           emoji.Keycap8,
-		"9":           emoji.Keycap9,
-		"10":          emoji.Keycap10,
 	}
 
 	s := ""
@@ -202,7 +149,7 @@ func (b *Board) String() string {
 	// print board
 	for _, row := range b.Grid {
 		for _, col := range row {
-			s += fmt.Sprintf("%v ", displayTable[col])
+			s += fmt.Sprintf("%v ", displayPlayerSymbols[col])
 		}
 		s += "\n"
 	}
