@@ -21,3 +21,7 @@ To update the proto files, run:
 ```sh
 ./dev/proto.sh
 ```
+
+Maybe even decentralized??
+
+- [libp2p](https://docs.libp2p.io/guides/getting-started/go/)

@@ -45,7 +45,7 @@ func StartApp(g *game.Game) {
 	grid := tview.NewGrid().
 		SetRows(8, 0, 10, 0, 3).
 		SetColumns(0, 25, 25, 0).
-		SetBorders(true).
+		// SetBorders(true).
 		AddItem(header, 0, 0, 1, 4, 0, 0, false).
 		AddItem(footer, 4, 0, 1, 4, 0, 0, false)
 
