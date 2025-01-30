@@ -70,11 +70,28 @@ func StartApp(g *game.Game) {
 			}
 		})
 
-	pages.AddPage("grid", grid, true, true).
+		// make menu page, with buttons for starting a new game, quitting, etc.
+		// menu := tview.NewFlex().
+
+	// AddButtons([]string{"New Game", "Quit"}).
+
+	// ----- MENU PAGE -----
+	startSinglePlayer := func() {
+		pages.SwitchToPage("grid")
+		app.SetFocus(boardWidget) // Set focus on BoardWidget when transitioning
+	}
+	menu := makeMenuPage(app, startSinglePlayer)
+
+	pages.AddPage("menu", menu, true, true).
+		AddPage("grid", grid, true, false).
 		AddPage("modal", modal, false, false)
 
-	if err := app.SetRoot(pages, true).EnableMouse(false).SetFocus(boardWidget).Run(); err != nil {
+	if err := app.SetRoot(pages, true).EnableMouse(false).Run(); err != nil {
 		panic(err)
 	}
+
+	// if err := app.SetRoot(pages, true).EnableMouse(false).SetFocus(boardWidget).Run(); err != nil {
+	// 	panic(err)
+	// }
 
 }
