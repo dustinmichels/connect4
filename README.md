@@ -14,11 +14,17 @@ go run .
 
 The goal is to add a bot for single-player, and online multiplayer node.
 
+### Single-player
+
+The bot will use monte carlo simulations to determine the best move.
+
 ### Multiplayer
 
 One user must run a gRPC server. Other players can connect as clients. When you launch a server, a google sheet will be updated with an encoded IP address, so other player can find you.
 
-## Proto
+Clients can be in the terminal, or a web app.
+
+#### Proto
 
 Experimenting with gRPC and protocol buffers for multiplayer.
 

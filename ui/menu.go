@@ -1,6 +1,8 @@
 package ui
 
 import (
+	"fmt"
+
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
@@ -18,6 +20,16 @@ func makeMenuPage(app *tview.Application, buttonAction func()) tview.Primitive {
 		tview.NewButton("Multiplayer (local)").SetSelectedFunc(buttonAction),
 		tview.NewButton("Multiplayer (online)").SetSelectedFunc(buttonAction),
 		tview.NewButton("Run server").SetSelectedFunc(buttonAction),
+	}
+
+	// Button styling
+	for _, btn := range buttons {
+		btn.SetFocusFunc(func() {
+			btn.SetLabel(fmt.Sprintf(">> %s <<", btn.GetLabel()))
+		})
+		btn.SetBlurFunc(func() {
+			btn.SetLabel(btn.GetLabel()[3 : len(btn.GetLabel())-3])
+		})
 	}
 
 	menu.AddItem(header, 0, 1, false)
