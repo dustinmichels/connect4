@@ -22,8 +22,19 @@ func makeMenuPage(app *tview.Application, buttonAction func()) tview.Primitive {
 		tview.NewButton("Run server").SetSelectedFunc(buttonAction),
 	}
 
+	// Apply colors to buttons
+	for _, btn := range buttons {
+		btn.SetLabelColor(tcell.ColorWhite)                          // Text color
+		btn.SetBorderColor(tcell.ColorRed.TrueColor())               // Default background color
+		btn.SetLabelColorActivated(tcell.ColorBlack)                 // Text color when selected
+		btn.SetBackgroundColorActivated(tcell.ColorLime.TrueColor()) // Background when selected
+		// btn.SetSelectedFunc(buttonAction)                  // Assign action
+	}
+
 	// Button styling
 	for _, btn := range buttons {
+		// btn.SetBackgroundColor(tcell.ColorBlack)
+
 		btn.SetFocusFunc(func() {
 			btn.SetLabel(fmt.Sprintf(">> %s <<", btn.GetLabel()))
 		})
