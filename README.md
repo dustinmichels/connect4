@@ -25,3 +25,5 @@ To update the proto files, run:
 Maybe even decentralized??
 
 - [libp2p](https://docs.libp2p.io/guides/getting-started/go/)
+
+[Google sheet](https://script.google.com/macros/s/AKfycbxHDhTy_UIjL51FrT6E9dKqMb1rYmdy2ZnLrRpubTdhXMgdy-fCKeKY1eSvPJuw_0s/exec)

@@ -19,6 +19,7 @@ var (
 func main() {
 	flag.Parse()
 	// Set up a connection to the server.
+	// conn, err := grpc.Dial("192.168.1.10:50051", grpc.WithInsecure()) // Replace with your server's IP
 	conn, err := grpc.NewClient(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
