@@ -1,9 +1,6 @@
 package ui
 
 import (
-	"fmt"
-
-	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
@@ -14,52 +11,24 @@ func makeMenuPage(app *tview.Application, buttonAction func()) tview.Primitive {
 
 	header := tview.NewTextView().SetText(AsciiArt2).SetTextAlign(tview.AlignCenter)
 
-	// Create buttons
-	buttons := []*tview.Button{
-		tview.NewButton("Singleplayer (vs Bot)").SetSelectedFunc(buttonAction),
-		tview.NewButton("Multiplayer (local)").SetSelectedFunc(buttonAction),
-		tview.NewButton("Multiplayer (online)").SetSelectedFunc(buttonAction),
-		tview.NewButton("Run server").SetSelectedFunc(buttonAction),
-	}
-
-	// Apply colors to buttons
-	for _, btn := range buttons {
-		btn.SetLabelColor(tcell.ColorWhite)                          // Text color
-		btn.SetBorderColor(tcell.ColorRed.TrueColor())               // Default background color
-		btn.SetLabelColorActivated(tcell.ColorBlack)                 // Text color when selected
-		btn.SetBackgroundColorActivated(tcell.ColorLime.TrueColor()) // Background when selected
-
-		// additional effects
-		btn.SetFocusFunc(func() {
-			btn.SetLabel(fmt.Sprintf(">> %s <<", btn.GetLabel()))
-		})
-		btn.SetBlurFunc(func() {
-			btn.SetLabel(btn.GetLabel()[3 : len(btn.GetLabel())-3])
+	list := tview.NewList().
+		AddItem("Play local", "1-v-1 and 1-v-Bot", '1', buttonAction).
+		AddItem("Play online", "Host or join a server", '2', nil).
+		AddItem("Quit", "Press to exit", 'q', func() {
+			app.Stop()
 		})
 
-	}
+	list.SetHighlightFullLine(true)
+	list.SetBorder(true).SetTitle(" Welcome ")
+
+	listCentered := tview.NewFlex().SetDirection(tview.FlexColumn)
+	listCentered.AddItem(tview.NewBox(), 0, 1, false)
+	listCentered.AddItem(list, 0, 3, true)
+	listCentered.AddItem(tview.NewBox(), 0, 1, false)
 
 	menu.AddItem(header, 0, 1, false)
-	for _, btn := range buttons {
-		menu.AddItem(btn, 1, 1, true)
-	}
+	menu.AddItem(listCentered, 0, 1, true)
 	menu.AddItem(tview.NewBox(), 0, 1, false)
-
-	// Enable arrow key navigation
-	currentIndex := 0
-	menu.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		switch event.Key() {
-		case tcell.KeyUp:
-			currentIndex = (currentIndex - 1 + len(buttons)) % len(buttons)
-			app.SetFocus(buttons[currentIndex])
-			return nil
-		case tcell.KeyDown:
-			currentIndex = (currentIndex + 1) % len(buttons)
-			app.SetFocus(buttons[currentIndex])
-			return nil
-		}
-		return event
-	})
 
 	return menu
 }
