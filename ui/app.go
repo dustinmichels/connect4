@@ -52,7 +52,7 @@ func StartApp(g *game.Game) {
 	grid.
 		AddItem(tview.NewBox(), 1, 0, 1, 4, 0, 0, false). // upper fill
 		AddItem(leftSideBar, 2, 0, 1, 1, 0, 0, false).
-		AddItem(gameFrame, 2, 1, 1, 1, 0, 0, false).
+		AddItem(gameFrame, 2, 1, 1, 1, 0, 0, true).
 		AddItem(playerWidget, 2, 2, 1, 1, 0, 0, false).
 		AddItem(rightSideBar, 2, 3, 1, 1, 0, 0, false).
 		AddItem(tview.NewBox(), 3, 0, 1, 4, 0, 0, false)
@@ -70,15 +70,10 @@ func StartApp(g *game.Game) {
 			}
 		})
 
-		// make menu page, with buttons for starting a new game, quitting, etc.
-		// menu := tview.NewFlex().
-
-	// AddButtons([]string{"New Game", "Quit"}).
-
 	// ----- MENU PAGE -----
 	startSinglePlayer := func() {
 		pages.SwitchToPage("grid")
-		app.SetFocus(boardWidget) // Set focus on BoardWidget when transitioning
+		// app.SetFocus(boardWidget) // Set focus on BoardWidget when transitioning
 	}
 	menu := makeMenuPage(app, startSinglePlayer)
 
@@ -89,9 +84,5 @@ func StartApp(g *game.Game) {
 	if err := app.SetRoot(pages, true).EnableMouse(false).Run(); err != nil {
 		panic(err)
 	}
-
-	// if err := app.SetRoot(pages, true).EnableMouse(false).SetFocus(boardWidget).Run(); err != nil {
-	// 	panic(err)
-	// }
 
 }

@@ -8,6 +8,7 @@ import (
 // makeMenuPage creates a menu page with arrow key navigation
 func makeMenuPage(app *tview.Application, buttonAction func()) tview.Primitive {
 	menu := tview.NewFlex().SetDirection(tview.FlexRow)
+	menu.SetTitle("Menu")
 
 	header := tview.NewTextView().SetText(AsciiArt2).SetTextAlign(tview.AlignCenter)
 
@@ -21,8 +22,9 @@ func makeMenuPage(app *tview.Application, buttonAction func()) tview.Primitive {
 
 	menu.AddItem(header, 0, 1, false)
 	for _, btn := range buttons {
-		menu.AddItem(btn, 2, 1, false)
+		menu.AddItem(btn, 1, 1, true)
 	}
+	menu.AddItem(tview.NewBox(), 0, 1, false)
 
 	// Enable arrow key navigation
 	currentIndex := 0
@@ -39,9 +41,6 @@ func makeMenuPage(app *tview.Application, buttonAction func()) tview.Primitive {
 		}
 		return event
 	})
-
-	// Set initial focus
-	app.SetFocus(buttons[currentIndex])
 
 	return menu
 }

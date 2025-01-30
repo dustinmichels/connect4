@@ -6,11 +6,17 @@ Connect4 in the terminal, written in Go.
 
 ## Usage
 
-The "game" module contains the bare-bones of a connect4 game. You can run a demo with:
-
 ```sh
-go run cmd/game/main.go
+go run .
 ```
+
+## Ambition
+
+The goal is to add a bot for single-player, and online multiplayer node.
+
+### Multiplayer
+
+One user must run a gRPC server. Other players can connect as clients. When you launch a server, a google sheet will be updated with an encoded IP address, so other player can find you.
 
 ## Proto
 
