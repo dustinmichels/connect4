@@ -28,19 +28,15 @@ func makeMenuPage(app *tview.Application, buttonAction func()) tview.Primitive {
 		btn.SetBorderColor(tcell.ColorRed.TrueColor())               // Default background color
 		btn.SetLabelColorActivated(tcell.ColorBlack)                 // Text color when selected
 		btn.SetBackgroundColorActivated(tcell.ColorLime.TrueColor()) // Background when selected
-		// btn.SetSelectedFunc(buttonAction)                  // Assign action
-	}
 
-	// Button styling
-	for _, btn := range buttons {
-		// btn.SetBackgroundColor(tcell.ColorBlack)
-
+		// additional effects
 		btn.SetFocusFunc(func() {
 			btn.SetLabel(fmt.Sprintf(">> %s <<", btn.GetLabel()))
 		})
 		btn.SetBlurFunc(func() {
 			btn.SetLabel(btn.GetLabel()[3 : len(btn.GetLabel())-3])
 		})
+
 	}
 
 	menu.AddItem(header, 0, 1, false)
