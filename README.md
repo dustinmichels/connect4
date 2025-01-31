@@ -10,6 +10,28 @@ Connect4 in the terminal, written in Go.
 go run .
 ```
 
+## Server / Client Connection
+
+Run the server:
+
+```sh
+go run cmd/server/main.go
+```
+
+Then run ngrok:
+
+```sh
+ngrok tcp 50051
+```
+
+Take the forwarding address (eg, "6.tcp.ngrok.io:12538").
+
+Run the client:
+
+```sh
+go run client/main.go -addr 6.tcp.ngrok.io:12538
+```
+
 ## Ambition
 
 The goal is to add a bot for single-player, and online multiplayer node.
